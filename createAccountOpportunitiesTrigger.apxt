@@ -1,0 +1,22 @@
+trigger createAccountOpportunitiesTrigger on Account (after insert) {
+	if(Trigger.isInsert){
+
+    List<Opportunity> oppList = new List <Opportunity>();
+
+        for(Account acc : trigger.new){
+    
+            Opportunity defaultResidentialOpp = new Opportunity();
+            	defaultResidentialOpp.Accountid = acc.id;
+        		defaultResidentialOpp.name = 'Default Residential Opportunity';
+            	defaultResidentialOpp.StageName ='';
+        		oppList.add(defaultResidentialOpp);
+            
+            Opportunity defaultCommercialOpp = new Opportunity();
+    			defaultCommercialOpp.Accountid =  acc.id;
+        		defaultCommercialOpp.name = 'Default Commercial Opportunity';
+            	defaultCommercialOpp.StageName = '';
+            	oppList.add(defaultCommercialOpp);
+        }
+        insert oppList; 
+    }
+}

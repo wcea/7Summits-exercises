@@ -1,0 +1,40 @@
+@isTest
+public class createAccountOpportunitiesTriggerTest {
+
+    public static testMethod void testAcc(){
+        // GET USER FROM USER TABLE...
+        User u = [select name, Id  FROM user LIMIT 1];
+        // RUN AS USER...
+        system.runAs(u)
+        {
+            // TEST ADDING A NEW ACCOUNT...                       
+            Account acc = new Account(
+                name = 'temp validation account'
+                );
+            insert acc;
+            system.debug('----->>> END ADDING ACCOUNT: ' + acc.name);
+
+            // READ ACCOUNT...
+            Account a = [select name, Id  FROM account WHERE name = 'temp validation account'];
+            system.debug('----->>> END READING ACCOUNT: ' + a.name);
+            // TEST ADDING A NEW OPPORTUNITY...
+            List<Opportunity> oppTestList = new List <Opportunity>();
+            Opportunity testOpp1 = new Opportunity(
+                AccountId = acc.id = 'testdata1',
+                name ='Default Residential Opportunity'
+                );
+            oppTestList.add(testOpp1);
+            
+            Opportunity testOpp2 = new Opportunity(
+                AccountId = acc.id = 'testdata2',
+                name ='Default Commercial Opportunity'
+                );
+            oppTestList.add(testOpp2);
+            
+            system.debug('----->>> END INSERT OPPORTUNITY: ' + acc.name);
+            insert oppTestList;
+        }
+        system.debug('----->>> RUNNING AS USER: ' + u.name);  
+   }       
+
+}

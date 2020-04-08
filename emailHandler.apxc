@@ -1,0 +1,17 @@
+public class EmailHandler{
+
+      public static void sendTriggerEmail (List<String> contactids){
+        Messaging.MassEmailMessage mail = new Messaging.MassEmailMessage();
+          
+        //set the email properties
+        mail.setTargetObjectIds(contactids);
+        mail.setSenderDisplayName('Your company customer service');
+        mail.setTemplateId('idOfTheEmailTemplate');
+        mail.setSubject('Alert! - Changes to your account');
+        String body = 'Alert - One or both of the default opportunities on your account have been altered or deleted.'
+        mail.setHtmlBody(body);
+
+        //send the email
+        Messaging.sendEmail (new Messaging.MassEmailMessage[] { mail } );
+     }
+}

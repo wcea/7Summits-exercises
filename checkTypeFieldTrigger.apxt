@@ -1,0 +1,17 @@
+trigger checkTypeFieldTrigger on Account (after update) {
+
+    list<Account> allAccounts = new list<Account>();
+    List<String> lcontactEmails = new List<String>();
+    
+    for(Account a : AllAccounts){
+        if (trigger.isUpdate){
+            if(a.type=='Prospect'){
+                if(a.Opportunities.size() < 2){
+                    //send email
+                    EmailHandler.sendTriggerEmail(lcontactEmails);
+                }
+            }
+        }
+    }
+    update allAccounts;
+}

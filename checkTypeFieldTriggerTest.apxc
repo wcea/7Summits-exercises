@@ -1,0 +1,31 @@
+@isTest
+public class checkTypeFieldTriggerTest {
+    
+    public static testMethod void testAcc(){     
+        // GET USER FROM USER TABLE...
+        User u = [select name, Id  FROM user LIMIT 1];
+        // RUN AS USER...
+        system.runAs(u){
+            list<Account> testAccounts = new list<Account>();
+            Account isProspect = [
+                SELECT Account FROM testAccounts WHERE type = 'Prospect'
+            ];
+            
+            for(Account a : isProspect){
+                Opportunity record1 = new Opportunity(/*only one opportunity was added*/);
+                    record1.Accountid = isProspect.id;
+                    record1.name = 'Default Residential Opportunity';
+            }
+            insert record1;
+        
+            Test.startTest(); //to validate how close the code is to reaching governor limits
+                update isProspect;
+                if(!isProspect = null && isProspect.Opportunities.size() < 2){
+                    Integer emailInvocations = Limits.getEmailInvocations();
+                }
+            Test.stopTest();
+        
+            system.assertEquals(1, emailInvocations, 'An email should be sent because both opportunities are not present');
+        }
+    }
+}
